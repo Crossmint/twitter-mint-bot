@@ -8,5 +8,3 @@ if (!process.env.TWITTER_BEARER_TOKEN) {
 }
 
 const twitterClient = new Client(process.env.TWITTER_BEARER_TOKEN!);
-
-// console.log(twitterClient);
