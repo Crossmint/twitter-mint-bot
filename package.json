@@ -3,19 +3,37 @@
     "version": "0.0.1",
     "license": "MIT",
     "type": "module",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "sideEffects": false,
+    "main": "lib/index.cjs",
+    "module": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "exports": {
+        ".": {
+            "import": "./lib/index.js",
+            "require": "./lib/index.cjs"
+        }
+    },
+    "files": [
+        "lib",
+        "src",
+        "LICENSE"
+    ],
     "scripts": {
         "lint": "eslint src/ --ext .js,.ts",
-        "build": "yarn clean && tsc",
-        "clean": "shx rm -rf dist build",
+        "build": "yarn clean && tsup src/index.ts --format esm,cjs --outDir ./lib --minify --dts",
+        "clean": "shx rm -rf lib",
         "dev": "nodemon",
-        "start": "node dist/index.js"
+        "start": "node lib/index.js"
     },
     "dependencies": {
+        "axios": "^0.27.2",
         "dotenv": "^16.0.1",
-        "node-fetch": "^3.0.0",
-        "twitter-api-sdk": "^1.1.0"
+        "exponential-backoff": "^3.1.0",
+        "get-emails": "^4.0.0",
+        "node-fetch": "^3.2.8",
+        "twitter-api-sdk": "^1.1.0",
+        "twitter-api-v2": "^1.12.3",
+        "uuidv4": "^6.2.13"
     },
     "devDependencies": {
         "@types/node": "^18.0.4",
@@ -25,6 +43,7 @@
         "nodemon": "^2.0.19",
         "shx": "^0.3.4",
         "ts-node": "^10.9.1",
+        "tsup": "^6.1.3",
         "typescript": "^4.7.4"
     }
 }

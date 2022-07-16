@@ -120,9 +120,8 @@
         "experimentalDecorators": true,
         "sourceMap": true,
         "outDir": "./dist/",
-        "types": ["node"],
-        "lib": ["ES6"]
+        "types": ["node"]
     },
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", ".d.ts"],
     "exclude": ["node_modules"]
 }

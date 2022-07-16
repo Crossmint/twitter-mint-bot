@@ -1,5 +1,14 @@
 import dotenv from "dotenv";
+import { backOff } from "exponential-backoff";
+import fetch from "node-fetch";
 import { Client } from "twitter-api-sdk";
+import { TwitterApi } from "twitter-api-v2";
+import MintAPIAdapter from "./adapters/MintAPIAdapter";
+import TweetPikAdapter from "./adapters/TweetPikAdapter";
+import { parseRecipientFromTweetText } from "./utils";
+import { backOffFew } from "./utils/backoff";
+
+import { uuid } from "uuidv4";
 
 dotenv.config();
 
@@ -15,6 +24,8 @@ const twitterClient = new Client(process.env.TWITTER_BEARER_TOKEN!);
 
 // Maxwell: Rules are saved until they are deleted, so no need to rerun this. I've added a rule that our stream will only contain tweets that mention @${process.env.BOT_TWITTER_USERNAME}
 async function init() {
+    console.log("[Twitter-Mint-Bot] Starting up...");
+
     // await twitterClient.tweets.addOrDeleteRules({
     //     add: [
     //         {
@@ -30,12 +41,109 @@ async function main() {
     await init();
 
     const stream = twitterClient.tweets.searchStream({
-        expansions: ["entities.mentions.username"],
+        "tweet.fields": ["referenced_tweets"],
     });
 
     for await (const tweet of stream) {
-        // All tweets here will mention our bot
-        console.log(JSON.stringify(tweet, undefined, 2));
+        // Tweet mentions the bot
+        if (
+            tweet.data?.referenced_tweets &&
+            tweet.data?.referenced_tweets.length > 0
+        ) {
+            console.log(
+                "[Twitter-Mint-Bot] New mint request",
+                JSON.stringify(tweet, undefined, 2)
+            );
+
+            try {
+                const referencedTweetId = tweet.data?.referenced_tweets[0].id;
+                // Tweet mentions the bot and are replying to another tweet
+                const recipientInfo = parseRecipientFromTweetText(
+                    tweet.data.text
+                );
+
+                console.log(
+                    `[Twitter Mint Bot] Parsed recipient info: ${JSON.stringify(
+                        recipientInfo
+                    )}`
+                );
+
+                if (!recipientInfo) {
+                    continue;
+                }
+
+                const tweetImageURL =
+                    await TweetPikAdapter.createImageURLForTweet(
+                        referencedTweetId
+                    );
+
+                console.log(
+                    `[Twitter Mint Bot] Created image for tweet: ${tweet.data.id}, url:${tweetImageURL}`
+                );
+                if (!tweetImageURL) {
+                    continue;
+                }
+
+                const mintTweetRequestData = await MintAPIAdapter.mintTweetNFT(
+                    twitterClient,
+                    tweetImageURL!,
+                    referencedTweetId,
+                    recipientInfo
+                );
+
+                if (!mintTweetRequestData) {
+                    continue;
+                }
+                // 15 sec
+                const statusRequestData = await backOffFew(async () => {
+                    return await MintAPIAdapter.awaitStatusSuccess(
+                        mintTweetRequestData.requestId
+                    );
+                });
+
+                if (
+                    !statusRequestData ||
+                    statusRequestData?.status !== "success"
+                ) {
+                    continue;
+                }
+
+                const client = new TwitterApi({
+                    appKey: process.env.TWITTER_APP_KEY!,
+                    appSecret: process.env.TWITTER_APP_SECRET!,
+                    accessToken: process.env.TWITTER_ACCESS_TOKEN!,
+                    accessSecret: process.env.TWITTER_ACCESS_SECRET!,
+                });
+
+                const mediaId = await backOffFew(async () => {
+                    return await client.v1.uploadMedia(
+                        Buffer.from(
+                            await (await fetch(tweetImageURL)).arrayBuffer()
+                        ),
+                        {
+                            mimeType: "image/png",
+                        }
+                    );
+                });
+
+                const tweetedReply = await backOffFew(async () => {
+                    return await client.v2.tweet(
+                        "Thanks for minting, degen\n\n" +
+                            `https://mumbai.polygonscan.com/tx/${statusRequestData.txId}`,
+                        {
+                            reply: {
+                                in_reply_to_tweet_id: tweet.data?.id!,
+                            },
+                            media: {
+                                media_ids: [mediaId],
+                            },
+                        }
+                    );
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
     }
 }
 
