@@ -24,8 +24,6 @@ export interface TweetMetadata {
     retweets: number;
 }
 
-const BOT_TREASURY_PUBLICKEY = "0xA6BA3271984Bdb79dA9C09Ea030044573d3910B0";
-
 export default class MintAPIAdapter {
     static async mintTweetNFT(
         twitterClient: Client,
