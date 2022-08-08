@@ -14,7 +14,7 @@ export function parseRecipientFromTweetText(
         return { value: emails[0], type: "email" };
     }
 
-    const evmAddressMatches = text.match(`0x[a-fA-F0-9]{40}`);
+    const evmAddressMatches = text.match(`0[xX][a-fA-F0-9]{40}`);
 
     if (evmAddressMatches && evmAddressMatches.length > 0) {
         return { value: evmAddressMatches[0], type: "poly" };
