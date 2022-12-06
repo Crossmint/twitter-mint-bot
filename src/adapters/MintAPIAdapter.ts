@@ -47,7 +47,7 @@ export default class MintAPIAdapter {
         try {
             const res = await backOffFew(async () => {
                 return await fetchPostJSON(
-                    `https://staging.crossmint.io/api/2022-06-09/nfts`,
+                    `https://staging.crossmint.io/api/2022-06-09/collections/default-polygon/nfts`,
                     {
                         mainnet: false,
                         metadata,
@@ -88,7 +88,7 @@ export default class MintAPIAdapter {
 
     static async getRequestStatus(requestId: string) {
         const res = await fetchGetJSON(
-            `https://staging.crossmint.io/api/2022-06-09/requests/${requestId}/status`,
+            `https://staging.crossmint.io/api/2022-06-09/collections/default-polygon/nfts/${requestId}`,
             {
                 "x-project-id": process.env.CROSSMINT_PROJECT_ID!,
                 "x-client-secret": process.env.CROSSMINT_CLIENT_SECRET!,
