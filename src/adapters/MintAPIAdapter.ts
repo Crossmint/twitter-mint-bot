@@ -115,7 +115,7 @@ export default class MintAPIAdapter {
                     resolve(res);
                     clearInterval(interval);
                 }
-            }, 5000);
+            }, 3000);
         });
     }
 }
