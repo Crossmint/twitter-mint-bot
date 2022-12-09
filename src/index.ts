@@ -128,7 +128,7 @@ async function main() {
 
                 const tweetedReply = await backOffFew(async () => {
                     return await client.v2.tweet(
-                        "Thanks for minting, degen\n\n" +
+                        "Thanks for minting, degen! Claim your NFT @crossmint\n\n" +
                             `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}\n`+
                             `https://testnets.opensea.io/assets/mumbai/${statusRequestData.onChain.contractAddress}/${statusRequestData.onChain.tokenId}`,
                         {
