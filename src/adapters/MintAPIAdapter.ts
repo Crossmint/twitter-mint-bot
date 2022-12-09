@@ -12,7 +12,6 @@ export interface Metadata extends TweetMetadata {
     name: string;
     image: string;
     description: string;
-
     attributes: TweetMetadata;
 }
 
@@ -63,7 +62,7 @@ export default class MintAPIAdapter {
             });
 
             console.log(
-                `[Twitter-Mint-Bot] Mint request ${res.requestId} initiated: `,
+                `[Twitter-Mint-Bot] Mint request ${res.id} initiated: `,
                 JSON.stringify(res, undefined, 2)
             );
 
@@ -109,9 +108,10 @@ export default class MintAPIAdapter {
                     `[Twitter-Mint-Bot] Mint request ${requestId} status: `,
                     JSON.stringify(res, undefined, 2)
                 );
-                status = res.status;
+                status = res.onChain.status;
 
                 if (status !== "pending") {
+                    console.log("[Twitter-Mint-Bot] Resolved status: " + status);
                     resolve(res);
                     clearInterval(interval);
                 }

@@ -63,7 +63,7 @@ async function main() {
                 );
 
                 console.log(
-                    `[Twitter Mint Bot] Parsed recipient info: ${JSON.stringify(
+                    `[Twitter-Mint-Bot] Parsed recipient info: ${JSON.stringify(
                         recipientInfo
                     )}`
                 );
@@ -78,7 +78,7 @@ async function main() {
                     );
 
                 console.log(
-                    `[Twitter Mint Bot] Created image for tweet: ${tweet.data.id}, url:${tweetImageURL}`
+                    `[Twitter-Mint-Bot] Created image for tweet: ${tweet.data.id}, url: ${tweetImageURL}`
                 );
                 if (!tweetImageURL) {
                     continue;
@@ -97,13 +97,13 @@ async function main() {
                 // 15 sec
                 const statusRequestData = await backOffFew(async () => {
                     return await MintAPIAdapter.awaitStatusSuccess(
-                        mintTweetRequestData.requestId
+                        mintTweetRequestData.id
                     );
                 });
 
                 if (
                     !statusRequestData ||
-                    statusRequestData?.status !== "success"
+                    statusRequestData?.onChain.status !== "success"
                 ) {
                     continue;
                 }
@@ -129,7 +129,7 @@ async function main() {
                 const tweetedReply = await backOffFew(async () => {
                     return await client.v2.tweet(
                         "Thanks for minting, degen\n\n" +
-                            `https://mumbai.polygonscan.com/tx/${statusRequestData.txId}`,
+                            `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}`,
                         {
                             reply: {
                                 in_reply_to_tweet_id: tweet.data?.id!,
@@ -140,6 +140,7 @@ async function main() {
                         }
                     );
                 });
+                console.log("[Twitter-Mint-Bot] Posted a response to a tag");
             } catch (e) {
                 console.log(e);
             }
