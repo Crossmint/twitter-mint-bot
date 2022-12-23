@@ -97,7 +97,8 @@ async function main() {
                 // 15 sec
                 const statusRequestData = await backOffFew(async () => {
                     return await MintAPIAdapter.awaitStatusSuccess(
-                        mintTweetRequestData.id
+                        mintTweetRequestData.id,
+                        mintTweetRequestData.onChain.chain
                     );
                 });
 
@@ -127,19 +128,47 @@ async function main() {
                 });
 
                 const tweetedReply = await backOffFew(async () => {
-                    return await client.v2.tweet(
-                        "Thanks for minting with #Crossmint, degen! \n\n" +
-                            `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}\n`+
-                            `https://testnets.opensea.io/assets/mumbai/${statusRequestData.onChain.contractAddress}/${statusRequestData.onChain.tokenId}`,
-                        {
-                            reply: {
-                                in_reply_to_tweet_id: tweet.data?.id!,
-                            },
-                            media: {
-                                media_ids: [mediaId],
-                            },
-                        }
-                    );
+                    if (statusRequestData.onChain.chain = "polygon"){
+                        return await client.v2.tweet(
+                            "Thanks for minting with #Crossmint, degen! \n\n" +
+                                `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}\n`+
+                                `https://testnets.opensea.io/assets/mumbai/${statusRequestData.onChain.contractAddress}/${statusRequestData.onChain.tokenId}`,
+                            {
+                                reply: {
+                                    in_reply_to_tweet_id: tweet.data?.id!,
+                                },
+                                media: {
+                                    media_ids: [mediaId],
+                                },
+                            }
+                        );
+                    } else if (statusRequestData.onChain.chain = "solana"){
+                        return await client.v2.tweet(
+                            "Thanks for minting with #Crossmint, degen! \n\n" +
+                                `https://solscan.io/token/${statusRequestData.onChain.mintHash}?cluster=testnet`,
+                            {
+                                reply: {
+                                    in_reply_to_tweet_id: tweet.data?.id!,
+                                },
+                                media: {
+                                    media_ids: [mediaId],
+                                },
+                            }
+                        );
+                    } else {
+                        return await client.v2.tweet(
+                            "Thanks for minting with #Crossmint, degen! \n\n",
+                            {
+                                reply: {
+                                    in_reply_to_tweet_id: tweet.data?.id!,
+                                },
+                                media: {
+                                    media_ids: [mediaId],
+                                },
+                            }
+                        );
+                    }
+                    
                 });
                 console.log("[Twitter-Mint-Bot] Posted a response to a tag");
             } catch (e) {

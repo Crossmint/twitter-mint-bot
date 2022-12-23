@@ -46,13 +46,13 @@ export default class MintAPIAdapter {
         try {
             const res = await backOffFew(async () => {
                 return await fetchPostJSON(
-                    `https://staging.crossmint.io/api/2022-06-09/collections/default-polygon/nfts`,
+                    `https://staging.crossmint.io/api/2022-06-09/collections/default-${recipientInfo.chain}/nfts`,
                     {
                         mainnet: false,
                         metadata,
                         recipient: `${recipientInfo.type}:${
                             recipientInfo.value
-                        }${recipientInfo.type === "email" ? ":poly" : ""}`,
+                        }${recipientInfo.type === "email" ? `${recipientInfo.type}` : ""}`,
                     },
                     {
                         "x-project-id": process.env.CROSSMINT_PROJECT_ID!,
@@ -85,9 +85,9 @@ export default class MintAPIAdapter {
         } as TweetMetadata;
     }
 
-    static async getRequestStatus(requestId: string) {
+    static async getRequestStatus(requestId: string, requestChain: string) {
         const res = await fetchGetJSON(
-            `https://staging.crossmint.io/api/2022-06-09/collections/default-polygon/nfts/${requestId}`,
+            `https://staging.crossmint.io/api/2022-06-09/collections/default-${requestChain}/nfts/${requestId}`,
             {
                 "x-project-id": process.env.CROSSMINT_PROJECT_ID!,
                 "x-client-secret": process.env.CROSSMINT_CLIENT_SECRET!,
@@ -97,12 +97,12 @@ export default class MintAPIAdapter {
         return res;
     }
 
-    static async awaitStatusSuccess(requestId: string) {
+    static async awaitStatusSuccess(requestId: string, requestChain: string) {
         let status = "pending";
 
         return await new Promise<any>((resolve) => {
             const interval = setInterval(async () => {
-                const res = await this.getRequestStatus(requestId);
+                const res = await this.getRequestStatus(requestId, requestChain);
 
                 console.log(
                     `[Twitter-Mint-Bot] Mint request ${requestId} status: `,
