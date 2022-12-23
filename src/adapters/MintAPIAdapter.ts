@@ -52,7 +52,7 @@ export default class MintAPIAdapter {
                         metadata,
                         recipient: `${recipientInfo.chain}:${
                             recipientInfo.value
-                        }${recipientInfo.type === "email" ? `${recipientInfo.type}` : ""}`,
+                        }:${recipientInfo.type === "email" ? `${recipientInfo.type}` : ""}`,
                     },
                     {
                         "x-project-id": process.env.CROSSMINT_PROJECT_ID!,
