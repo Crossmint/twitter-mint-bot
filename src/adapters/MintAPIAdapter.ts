@@ -1,7 +1,7 @@
 import Client from "twitter-api-sdk";
 import * as twitter from "twitter-api-sdk";
 import { RecipientRequest } from "../utils";
-import { fetchGetJSON, fetchPostJSON } from "../utils/fetch";
+import { fetchGetJSON, fetchPostJSON, fetchPutJSON } from "../utils/fetch";
 import { backOffFew } from "../utils/backoff";
 
 import dotenv from "dotenv";
@@ -45,8 +45,8 @@ export default class MintAPIAdapter {
 
         try {
             const res = await backOffFew(async () => {
-                return await fetchPostJSON(
-                    `https://staging.crossmint.io/api/2022-06-09/collections/default-${recipientInfo.chain}/nfts`,
+                return await fetchPutJSON(
+                    `https://staging.crossmint.io/api/2022-06-09/collections/default-${recipientInfo.chain}/nfts/100`,
                     {
                         mainnet: false,
                         metadata,
