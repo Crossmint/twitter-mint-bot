@@ -128,7 +128,7 @@ async function main() {
                 });
 
                 const tweetedReply = await backOffFew(async () => {
-                    if (statusRequestData.onChain.chain = "polygon"){
+                    if (statusRequestData.onChain.chain == "polygon"){
                         return await client.v2.tweet(
                             "Thanks for minting with #Crossmint, degen! \n\n" +
                                 `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}\n`+
@@ -142,7 +142,7 @@ async function main() {
                                 },
                             }
                         );
-                    } else if (statusRequestData.onChain.chain = "solana"){
+                    } else if (statusRequestData.onChain.chain == "solana"){
                         return await client.v2.tweet(
                             "Thanks for minting with #Crossmint, degen! \n\n" +
                                 `https://solscan.io/token/${statusRequestData.onChain.mintHash}?cluster=devnet`,

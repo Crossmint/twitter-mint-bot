@@ -47,8 +47,8 @@ export default class MintAPIAdapter {
 
         try {
             const res = await backOffFew(async () => {
-                return await fetchPutJSON(
-                    `https://staging.crossmint.io/api/2022-06-09/collections/default-${recipientInfo.chain}/nfts/100`,
+                return await fetchPostJSON(
+                    `https://staging.crossmint.io/api/2022-06-09/collections/default-${recipientInfo.chain}/nfts`,
                     {
                         mainnet: false,
                         metadata,
