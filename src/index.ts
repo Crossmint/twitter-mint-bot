@@ -145,7 +145,7 @@ async function main() {
                     } else if (statusRequestData.onChain.chain = "solana"){
                         return await client.v2.tweet(
                             "Thanks for minting with #Crossmint, degen! \n\n" +
-                                `https://solscan.io/token/${statusRequestData.onChain.mintHash}?cluster=testnet`,
+                                `https://solscan.io/token/${statusRequestData.onChain.mintHash}?cluster=devnet`,
                             {
                                 reply: {
                                     in_reply_to_tweet_id: tweet.data?.id!,
