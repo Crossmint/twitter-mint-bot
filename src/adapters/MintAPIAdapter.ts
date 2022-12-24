@@ -73,6 +73,7 @@ export default class MintAPIAdapter {
             console.log({
                 mainnet: false,
                 metadata,
+                symbol: "CROSSMINT",
                 recipient: `${recipientInfo.type === "email" ? `email` : recipientInfo.chain}:${recipientInfo.value}${recipientInfo.type === "email" ? `:${recipientInfo.chain}` : ""}`,
 
             });
