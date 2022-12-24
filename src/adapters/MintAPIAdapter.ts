@@ -43,8 +43,6 @@ export default class MintAPIAdapter {
             attributes: this.parseReferencedTweetToMetadata(referencedTweet),
         };
 
-        console.log(metadata.attributes)
-
         try {
             const res = await backOffFew(async () => {
                 return await fetchPostJSON(
@@ -70,13 +68,6 @@ export default class MintAPIAdapter {
             return res;
         } catch (e) {
             console.log(e);
-            console.log({
-                mainnet: false,
-                metadata,
-                symbol: "CROSSMINT",
-                recipient: `${recipientInfo.type === "email" ? `email` : recipientInfo.chain}:${recipientInfo.value}${recipientInfo.type === "email" ? `:${recipientInfo.chain}` : ""}`,
-
-            });
             return undefined;
         }
     }

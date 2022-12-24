@@ -18,6 +18,7 @@ export function parseRecipientFromTweetText(
         }
 
         const solAddressMatches = text.match((`^[1-9A-HJ-NP-Za-km-z]{32,44}$`) );
+        console.log(solAddressMatches);
         if (solAddressMatches && solAddressMatches.length > 0) {
             return { value: solAddressMatches[0], type: "solana", chain: "solana" };
         }} 

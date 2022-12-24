@@ -62,15 +62,15 @@ async function main() {
                     tweet.data.text
                 );
 
+                if (!recipientInfo) {
+                    continue;
+                }
+
                 console.log(
                     `[Twitter-Mint-Bot] Parsed recipient info: ${JSON.stringify(
                         recipientInfo
                     )}`
                 );
-
-                if (!recipientInfo) {
-                    continue;
-                }
 
                 const tweetImageURL =
                     await TweetPikAdapter.createImageURLForTweet(
