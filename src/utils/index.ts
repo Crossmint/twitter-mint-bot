@@ -18,7 +18,7 @@ export function parseRecipientFromTweetText(
         }
 
         const solAddressMatches = text.match((`[1-9A-HJ-NP-Za-km-z]{32,44}`) );
-        console.log(solAddressMatches);
+        console.log("SOL Matches:", solAddressMatches);
         if (solAddressMatches && solAddressMatches.length > 0) {
             return { value: solAddressMatches[0], type: "solana", chain: "solana" };
         }} 
@@ -29,6 +29,7 @@ export function parseRecipientFromTweetText(
         
         const evmAddressMatches = text.match(`0[xX][a-fA-F0-9]{40}`);
         if (evmAddressMatches && evmAddressMatches.length > 0) {
+            console.log("EVM Matches:", evmAddressMatches);
             return { value: evmAddressMatches[0], type: "polygon", chain: "polygon" };
         }
     }
