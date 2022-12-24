@@ -132,7 +132,7 @@ async function main() {
                         return await client.v2.tweet(
                             "Thanks for minting with #Crossmint, degen! \n\n" +
                                 `https://mumbai.polygonscan.com/tx/${statusRequestData.onChain.txId}\n`+
-                                `https://testnets.rarible.com/token/polygon/${statusRequestData.onChain.contractAddress}:${statusRequestData.onChain.tokenId}`,
+                                `https://testnet.rarible.com/token/polygon/${statusRequestData.onChain.contractAddress}:${statusRequestData.onChain.tokenId}`,
                             {
                                 reply: {
                                     in_reply_to_tweet_id: tweet.data?.id!,
