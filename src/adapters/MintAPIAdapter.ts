@@ -91,14 +91,6 @@ export default class MintAPIAdapter {
             {
                 "trait_type": "tweeted_at",
                 "value": referencedTweet.data?.created_at!
-            },
-            {
-                "trait_type": "likes",
-                "value": referencedTweet.data?.public_metrics?.like_count!
-            },
-            {
-                "trait_type": "retweets",
-                "value": referencedTweet.data?.public_metrics?.retweet_count!
             }
         ];
     }
