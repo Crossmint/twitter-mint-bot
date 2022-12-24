@@ -43,6 +43,8 @@ export default class MintAPIAdapter {
             attributes: this.parseReferencedTweetToMetadata(referencedTweet),
         } as Metadata;
 
+        console.log(metadata.attributes)
+
         try {
             const res = await backOffFew(async () => {
                 return await fetchPutJSON(
