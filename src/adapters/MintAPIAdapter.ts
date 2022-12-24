@@ -68,6 +68,12 @@ export default class MintAPIAdapter {
             return res;
         } catch (e) {
             console.log(e);
+            console.log({
+                mainnet: false,
+                metadata,
+                recipient: `${recipientInfo.type === "email" ? `email` : recipientInfo.chain}:${recipientInfo.value}${recipientInfo.type === "email" ? `:${recipientInfo.chain}` : ""}`,
+
+            });
             return undefined;
         }
     }
