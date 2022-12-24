@@ -41,7 +41,7 @@ export default class MintAPIAdapter {
             image: tweetImageURL,
             description: referencedTweet.data?.text,
             attributes: this.parseReferencedTweetToMetadata(referencedTweet),
-        } as Metadata;
+        };
 
         console.log(metadata.attributes)
 
@@ -83,13 +83,24 @@ export default class MintAPIAdapter {
     private static parseReferencedTweetToMetadata(
         referencedTweet: twitter.types.components["schemas"]["Get2TweetsIdResponse"]
     ) {
-        return {
-            author_id: referencedTweet.data?.author_id,
-            tweetedAt: referencedTweet.data?.created_at!,
-            text: referencedTweet.data?.text!,
-            likes: referencedTweet.data?.public_metrics?.like_count!,
-            retweets: referencedTweet.data?.public_metrics?.retweet_count!,
-        } as TweetMetadata;
+        return [
+            {
+                "trait_type": "author_id",
+                "value": referencedTweet.data?.author_id
+            },
+            {
+                "trait_type": "tweeted_at",
+                "value": referencedTweet.data?.created_at!
+            },
+            {
+                "trait_type": "likes",
+                "value": referencedTweet.data?.public_metrics?.like_count!
+            },
+            {
+                "trait_type": "retweets",
+                "value": referencedTweet.data?.public_metrics?.retweet_count!
+            }
+        ];
     }
 
     static async getRequestStatus(requestId: string, requestChain: string) {
